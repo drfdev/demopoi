@@ -30,7 +30,7 @@ public final class PoiReaderFactory {
         INVALID
     }
 
-    public static PoiReader getInstance(File file) throws PoiReaderException {
+    public static PoiReader getInstance(File file) throws PoiReaderException, IOException {
         if (!Objects.nonNull(file)) {
             throw new NullPointerException("File is null!");
         }
@@ -57,7 +57,7 @@ public final class PoiReaderFactory {
         throw new PoiReaderException("Invalid workbook type");
     }
 
-    public static PoiReader getInstance(Path path) throws PoiReaderException {
+    public static PoiReader getInstance(Path path) throws PoiReaderException, IOException {
         if (!Objects.nonNull(path)) {
             throw new NullPointerException("Path is null");
         }

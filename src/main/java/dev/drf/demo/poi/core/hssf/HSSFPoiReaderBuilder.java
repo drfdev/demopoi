@@ -1,6 +1,7 @@
 package dev.drf.demo.poi.core.hssf;
 
 import java.io.File;
+import java.io.IOException;
 
 public class HSSFPoiReaderBuilder {
     private File file;
@@ -9,7 +10,7 @@ public class HSSFPoiReaderBuilder {
         return new HSSFPoiReaderBuilder();
     }
 
-    public HSSFPoiReader build() {
+    public HSSFPoiReader build() throws IOException {
         return new HSSFPoiReader(file);
     }
 
