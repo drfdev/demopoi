@@ -3,6 +3,7 @@ package dev.drf.demo.poi.core;
 import dev.drf.demo.poi.core.err.PoiReaderException;
 import dev.drf.demo.poi.core.hssf.HSSFPoiReaderBuilder;
 import dev.drf.demo.poi.core.xssf.XSSFPoiReaderBuilder;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.poifs.filesystem.DirectoryNode;
 import org.apache.poi.poifs.filesystem.DocumentFactoryHelper;
 import org.apache.poi.poifs.filesystem.NPOIFSFileSystem;
@@ -30,7 +31,7 @@ public final class PoiReaderFactory {
         INVALID
     }
 
-    public static PoiReader getInstance(File file) throws PoiReaderException, IOException {
+    public static PoiReader getInstance(File file) throws PoiReaderException, IOException, InvalidFormatException {
         if (!Objects.nonNull(file)) {
             throw new NullPointerException("File is null!");
         }
@@ -57,7 +58,7 @@ public final class PoiReaderFactory {
         throw new PoiReaderException("Invalid workbook type");
     }
 
-    public static PoiReader getInstance(Path path) throws PoiReaderException, IOException {
+    public static PoiReader getInstance(Path path) throws PoiReaderException, IOException, InvalidFormatException {
         if (!Objects.nonNull(path)) {
             throw new NullPointerException("Path is null");
         }
