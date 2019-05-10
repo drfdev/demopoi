@@ -19,7 +19,7 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
+import java.util.Objects;
 
 class XSSFPoiReader implements PoiReader {
     private OPCPackage pkg;
@@ -27,33 +27,103 @@ class XSSFPoiReader implements PoiReader {
         this.pkg = OPCPackage.open(file);
     }
 
+    enum ProcessType {
+        FULL_FILE, SHEET_BY_NUMBER, SHEET_BY_NAME
+    }
+
     @Override
     public void processFile(PoiListener listener)
+            throws IOException, SAXException, OpenXML4JException, ParserConfigurationException {
+        /*ReadOnlySharedStringsTable strings = new ReadOnlySharedStringsTable(pkg);
+        XSSFReader reader = new XSSFReader(pkg);
+
+        StylesTable styles = reader.getStylesTable();
+        XSSFReader.SheetIterator sheetIterator = (XSSFReader.SheetIterator) reader.getSheetsData();
+
+        while (sheetIterator.hasNext()) {
+            try (InputStream stream = sheetIterator.next();) {
+                // String sheetName = iter.getSheetName();
+
+                processingSheet(styles, strings, stream, listener);
+            }
+        }*/
+        processWithEquals(listener, null, 0, ProcessType.FULL_FILE);
+    }
+
+    @Override
+    public void processSheet(int sheetNum, PoiListener listener)
+            throws IOException, SAXException, OpenXML4JException, ParserConfigurationException {
+        /*ReadOnlySharedStringsTable strings = new ReadOnlySharedStringsTable(pkg);
+        XSSFReader reader = new XSSFReader(pkg);
+
+        StylesTable styles = reader.getStylesTable();
+        XSSFReader.SheetIterator sheetIterator = (XSSFReader.SheetIterator) reader.getSheetsData();
+
+        int num = 0;
+        while (sheetIterator.hasNext()) {
+            try (InputStream stream = sheetIterator.next();) {
+                if (num == sheetNum) {
+                    processingSheet(styles, strings, stream, listener);
+                    break;
+                }
+            }
+            num ++;
+        }*/
+        processWithEquals(listener, null, sheetNum, ProcessType.SHEET_BY_NUMBER);
+    }
+
+    @Override
+    public void processSheet(String sheetName, PoiListener listener)
+            throws IOException, SAXException, OpenXML4JException, ParserConfigurationException {
+        /*ReadOnlySharedStringsTable strings = new ReadOnlySharedStringsTable(pkg);
+        XSSFReader reader = new XSSFReader(pkg);
+
+        StylesTable styles = reader.getStylesTable();
+        XSSFReader.SheetIterator sheetIterator = (XSSFReader.SheetIterator) reader.getSheetsData();
+
+        while (sheetIterator.hasNext()) {
+            try (InputStream stream = sheetIterator.next();) {
+                String thisSheetName = sheetIterator.getSheetName();
+                if (Objects.equals(thisSheetName, sheetName)) {
+                    processingSheet(styles, strings, stream, listener);
+                    break;
+                }
+            }
+        }*/
+        processWithEquals(listener, sheetName, 0, ProcessType.SHEET_BY_NAME);
+    }
+
+    private void processWithEquals(PoiListener listener,
+                                   String sheetName,
+                                   int sheetNum,
+                                   ProcessType processType)
             throws IOException, SAXException, OpenXML4JException, ParserConfigurationException {
         ReadOnlySharedStringsTable strings = new ReadOnlySharedStringsTable(pkg);
         XSSFReader reader = new XSSFReader(pkg);
 
         StylesTable styles = reader.getStylesTable();
-        Iterator<InputStream> iter = reader.getSheetsData();
-        // XSSFReader.SheetIterator iter
+        XSSFReader.SheetIterator sheetIterator = (XSSFReader.SheetIterator) reader.getSheetsData();
 
-        while (iter.hasNext()) {
-            InputStream stream = iter.next();
-            // String sheetName = iter.getSheetName();
-
-            processingSheet(styles, strings, stream, listener);
-            stream.close();
+        int num = 0;
+        while (sheetIterator.hasNext()) {
+            try (InputStream stream = sheetIterator.next()) {
+                if (processType == ProcessType.SHEET_BY_NAME) {
+                    String thisSheetName = sheetIterator.getSheetName();
+                    if (Objects.equals(thisSheetName, sheetName)) {
+                        processingSheet(styles, strings, stream, listener);
+                        break;
+                    }
+                } else if (processType == ProcessType.SHEET_BY_NUMBER) {
+                    if (num == sheetNum) {
+                        processingSheet(styles, strings, stream, listener);
+                        break;
+                    }
+                } else if (processType == ProcessType.FULL_FILE) {
+                    processingSheet(styles, strings, stream, listener);
+                }
+                num ++;
+            }
         }
-    }
-
-    @Override
-    public void processSheet(int sheetNum, PoiListener listener) {
-        // TODO
-    }
-
-    @Override
-    public void processSheet(String sheetName, PoiListener listener) {
-        // TODO
     }
 
     private void processingSheet(StylesTable styles,

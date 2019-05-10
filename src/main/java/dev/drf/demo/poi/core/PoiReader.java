@@ -10,6 +10,6 @@ public interface PoiReader extends AutoCloseable {
 
     void processFile(PoiListener listener)
             throws IOException, SAXException, OpenXML4JException, ParserConfigurationException;
-    void processSheet(int sheetNum, PoiListener listener);
-    void processSheet(String sheetName, PoiListener listener);
+    void processSheet(int sheetNum, PoiListener listener) throws IOException, SAXException, ParserConfigurationException, OpenXML4JException;
+    void processSheet(String sheetName, PoiListener listener) throws IOException, SAXException, OpenXML4JException, ParserConfigurationException;
 }
