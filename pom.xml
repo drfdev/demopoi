@@ -16,12 +16,12 @@
         <!--
         <maven.compiler.target>1.11</maven.compiler.target>
         <maven.compiler.source>1.11</maven.compiler.source>
-        <java.version>1.11</java.version>
         -->
-        <java.release>11</java.release>
+        <java.version>1.8</java.version>
+        <!--<java.release>11</java.release>-->
         <!-- DEPENDENCIES -->
         <junit.version>4.12</junit.version>
-        <mockito.version>1.9.5</mockito.version>
+        <!--<mockito.version>1.9.5</mockito.version>-->
         <poi.version>3.17</poi.version>
         <log.version>1.2.3</log.version>
         <log.slf4g.version>1.7.26</log.slf4g.version>
@@ -35,12 +35,12 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <version>${mockito.version}</version>
             <scope>test</scope>
-        </dependency>
+        </dependency>-->
         <!-- BUILD -->
         <dependency>
             <groupId>org.apache.poi</groupId>
@@ -79,11 +79,9 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
-                    <!--
                     <source>${java.version}</source>
                     <target>${java.version}</target>
-                    -->
-                    <release>${java.release}</release>
+                    <!--<release>${java.release}</release>-->
                 </configuration>
             </plugin>
             <!-- build jar -->
