@@ -9,11 +9,13 @@ public class MyPoiListener implements PoiListener {
     private int sheetNum;
     private int currentRowNum;
     private Map<Integer, Map<Integer, String>> sheetValues;
+    private Map<Integer, String> currentMap;
 
     public MyPoiListener() {
         this.sheetNum = -1;
         this.currentRowNum = -1;
-        sheetValues = new HashMap<>();
+        this.sheetValues = new HashMap<>();
+        this.currentMap = new HashMap<>();
     }
 
     @Override
@@ -24,16 +26,13 @@ public class MyPoiListener implements PoiListener {
     @Override
     public void nextRow(int rowNum) {
         this.currentRowNum = rowNum;
-        this.sheetValues.putIfAbsent(this.currentRowNum, new HashMap<>());
+        this.sheetValues.putIfAbsent(rowNum, this.currentMap);
+        this.currentMap = new HashMap<>();
     }
 
     @Override
     public void readCell(int cellNum, String value) {
-        this.sheetValues.computeIfPresent(this.currentRowNum,
-            (key, val) -> {
-                val.putIfAbsent(cellNum, value);
-                return val;
-        });
+        this.currentMap.putIfAbsent(cellNum, value);
     }
 
     public int getSheetNum() {
